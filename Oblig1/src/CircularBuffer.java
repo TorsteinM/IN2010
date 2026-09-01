@@ -35,9 +35,10 @@ public class CircularBuffer {
         // dobler kapasiteten til bufferen ved behov
         // shrink er ikke implementert
         int[] temp = new int[capacity*2];
-        for(int i = start; i < size; i++){
+        for(int i = 0; i < size; i++){
             temp[i] = buffer[(start + i) % capacity]; 
         }
+        start = 0;
         buffer = temp;
         capacity *= 2;
     }
