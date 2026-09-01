@@ -2,7 +2,7 @@
 
 Obligen har i hovedsak 3 implementasjonsoppgaver. Først en triple ended queue (oppgave 1) og insertion og merge sort(oppgave 2).
 
-# Oppgave 1 Teque - Triple Ended Queue
+# 1 Teque - Triple Ended Queue
 
 ## Double ended queue
 I følge oppgaveteksten er en dobbelendet kø en struktur som støtter push til både front og back på en sekvensiell struktur.
