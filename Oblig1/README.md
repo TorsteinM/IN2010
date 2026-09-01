@@ -1,18 +1,31 @@
-## Getting Started
+# Oblig 1
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Obligen har i hovedsak 3 implementasjonsoppgaver. Først en triple ended queue (oppgave 1) og insertion og merge sort(oppgave 2).
 
-## Folder Structure
+# Oppgave 1 Teque - Triple Ended Queue
 
-The workspace contains two folders by default, where:
+## Double ended queue
+I følge oppgaveteksten er en dobbelendet kø en struktur som støtter push til både front og back på en sekvensiell struktur.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+For en teque - Triple ended queue - skal det også være mulig med push til midten av køen.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Dette kan naturligvis implementeres både som lenket liste og som dynamisk array.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Array vs. Lenket liste
+For dagens maskinvare er dynamiske arrays kort sagt å foretrekke. I hovedsak på grunn av minnefragmenteringen og høy sannsynlighet for stor andel cache miss på oppslag ved bruk av lenkede lister.
 
-## Dependency Management
+Utfordringen blir da å implementere en elegant måte å indeksere en array slik at man slipper å flytte alle elementene i arrayen annenhver gang vi skal legge til et element.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## Ringbuffer og logisk
+Vi kan implementere en ringbuffer som et grensesnitt mellom logisk index [0, size - 1] og absolutt index [start, (start + size - 1) % kapasitet]. Remainder/mod operatoren gjør det enkelt og lesbart å la indeks wrappe rundt til begynnelsen av arrayen igjen. 
+
+## Deque implementert rundt ringbuffer
+
+Først implementeres Deque og så overlates problemet med push_middle til senere.
+
+Målet i Deque er at den forholder seg kun til logisk indeks, mens translasjonen til absolutt indeks tar CircularBuffer seg av.
+
+Ellers er implementasjonen ganske rett frem.
+
+## Teque
+Målet er å implementere denne ved hjelp av to ringbuffere. Disse må da følgelig balanseres på en slik måte at implementasjonen oppfyller kravene til push_middle fra oppgaven.
