@@ -9,6 +9,15 @@ public class CircularBuffer {
         int size;
         int capacity;
 
+    public CircularBuffer(int initCapacity) {
+        start = 0;
+        size = 0;
+        capacity = 1;
+        while (capacity < initCapacity) {
+            capacity *= 2;
+        }
+        buffer = new int[capacity];
+    }
     public CircularBuffer(int array[]) {
         start = 0;
         size = array.length;
