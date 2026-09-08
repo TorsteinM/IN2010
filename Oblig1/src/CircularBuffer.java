@@ -1,8 +1,7 @@
 public class CircularBuffer {
     // Implementerer logisk indeksering på en sirkulær buffer.
-    // Konvertering mellom logisk og absolutt indeksering skjer mod operatoren
-    // Denne instruksjonen(basert på idiv) er normalt krevende i forhold til 
-    // bit-manipulering, men brukes inntil videre pga. lesbarhet.
+    // OBS: Konvertering skjer med bitmaske.
+    // Dermed må størrelsen på buffer alltid være en toerpotens.
     private int[] buffer;
     private int start;
     private int size;
