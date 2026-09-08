@@ -3,12 +3,11 @@ public class CircularBuffer {
     // Konvertering mellom logisk og absolutt indeksering skjer mod operatoren
     // Denne instruksjonen(basert på idiv) er normalt krevende i forhold til 
     // bit-manipulering, men brukes inntil videre pga. lesbarhet.
-    private
-        int[] buffer;
-        int start;
-        int size;
-        int capacity;
-
+    private int[] buffer;
+    private int start;
+    private int size;
+    private int capacity;
+    
     public CircularBuffer(int initCapacity) {
         start = 0;
         size = 0;
@@ -18,6 +17,12 @@ public class CircularBuffer {
         }
         buffer = new int[capacity];
     }
+
+    public CircularBuffer() {
+        // Konstruerer en tom ringbuffer med kapasitet 8
+        this(8);
+    }
+
     public CircularBuffer(int array[]) {
         start = 0;
         size = array.length;
@@ -36,7 +41,7 @@ public class CircularBuffer {
         // shrink er ikke implementert
         int[] temp = new int[capacity*2];
         for(int i = 0; i < size; i++){
-            temp[i] = buffer[(start + i) % capacity]; 
+            temp[i] = buffer[(start + i) & (capacity - 1)]; 
         }
         start = 0;
         buffer = temp;
@@ -44,11 +49,11 @@ public class CircularBuffer {
     }
 
     public int get(int i) {
-        return buffer[(start + i) % capacity];
+        return buffer[(start + i) & (capacity - 1)];
     }
 
     public void set(int i, int value) {
-        buffer[(start + i) % capacity] = value;
+        buffer[(start + i) & capacity - 1] = value;
     }
 
     void push_back(int value){
@@ -57,7 +62,7 @@ public class CircularBuffer {
             // dobler vi kapasiteten
             resize();
         }
-        buffer[(start + size) % capacity] = value;
+        buffer[(start + size) & (capacity - 1)] = value;
         size += 1;
     }
 
@@ -78,5 +83,18 @@ public class CircularBuffer {
 
     public int length() {
         return size;
+    }
+
+    public int pop_front() {
+        int value = buffer[start];
+        start = (start + 1) & (capacity - 1);
+        size -= 1;
+        return value;
+    }
+
+    public int pop_back() {
+        int value = buffer[(start + size - 1) & (capacity - 1)];
+        size -= 1;
+        return value;
     }
 }

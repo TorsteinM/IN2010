@@ -56,13 +56,28 @@ public class CircularBufferTest {
 
         assertContents(buffer, 0, 1, 2, 3, 4);
     }
+    // Egenimplementere tester
+    private static void testPopBackPopFront() {
+        CircularBuffer buffer =
+            new CircularBuffer(new int[]{1, 2, 3});
+
+
+        // Tester Pop på begge sider av buffer.
+        assertEquals(buffer.pop_back(), 3);
+        assertEquals(buffer.pop_front(), 1);
+
+        assertContents(buffer, 2);
+    }
 
     public static void main(String[] args) {
+        //KI-implementerte tester
         testConstructor();
         testPushBack();
         testPushFront();
         testResizeAfterWrapping();
-
+        //Egen-implementerte tester
+        testPopBackPopFront();
+        
         System.out.println("All tests passed.");
     }
 }

@@ -1,16 +1,16 @@
-public class CircularDeque {
+public class Deque {
     // Implementerer en double ended queue rundt en sirkulær buffer
     private CircularBuffer buffer;
 
-    public CircularDeque() {
+    public Deque() {
         buffer = new CircularBuffer(16);
     }
 
-    public CircularDeque(int initCapacity) {
+    public Deque(int initCapacity) {
         buffer = new CircularBuffer(initCapacity);
     }
     
-    public CircularDeque(int[] array) {
+    public Deque(int[] array) {
         buffer = new CircularBuffer(array);
     }
 
