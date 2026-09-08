@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 public class Main {
+    // Generert med KI for å teste løsning opp mot Kattis kriterier
+    // Scorer 98/100 med 0.72 kjøretid. Antar det er Stringbuilder etc. som tar mye tid.
     public static void main(String[] args) throws Exception {
         BufferedReader reader =
                 new BufferedReader(new InputStreamReader(System.in));
