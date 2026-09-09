@@ -1,47 +1,66 @@
 # Oblig 1
 
-Obligen har i hovedsak 3 implementasjonsoppgaver. Først en triple ended queue (oppgave 1) og insertion og merge sort(oppgave 2).
+Del 1: Implementasjon av trippelendet kø og tilhørende kompleksitetsvurdering.
+Del 2: Implementasjon av Insertion Sort og Merge Sort
 
 # 1 Teque - Triple Ended Queue
 
 ## Double ended queue
-I følge oppgaveteksten er en dobbelendet kø en struktur som støtter push til både front og back på en sekvensiell struktur.
+Ifølge oppgaveteksten er en dobbeltendet kø en struktur som støtter push til både front og back på en sekvensiell struktur.
 
 For en teque - Triple ended queue - skal det også være mulig med push til midten av køen.
 
-Dette kan naturligvis implementeres både som lenket liste og som dynamisk array.
-
 ## Array vs. Lenket liste
-For dagens maskinvare er dynamiske arrays kort sagt å foretrekke. I hovedsak på grunn av minnefragmenteringen og høy sannsynlighet for stor andel cache miss på oppslag ved bruk av lenkede lister.
+Arrays har en rekke fordeler sammenlignet med lister ved blant annet direkte indeksering og enkelte maskinvare-aspekter som ligger litt på siden av faget.
 
-Utfordringen blir da å implementere en elegant måte å indeksere en array slik at man slipper å flytte alle elementene i arrayen annenhver gang vi skal legge til et element.
+En av utfordringene for arrays er konvensjonen med at indeks 0 er det første elementet og deretter følger et gitt antall elementer i serie. 
 
-## Ringbuffer og logisk
-Vi kan implementere en ringbuffer som kan danne et grensesnitt mellom logisk indeks (posisjon relativt til første element) og fysisk indeks (posisjon i forhold til første element i array). 
+Dermed må normalt alle verdiene flyttes ett hakk om et nytt element skal få første posisjon i en konvensjonell array.
 
-Remainder/mod operatoren gjør det enkelt og lesbart å la indeks wrappe rundt til begynnelsen av arrayen igjen.
+## Ringbuffer og logisk vs fysisk indeks
+Ringbuffer kan danne et grensesnitt mellom logisk indeks og fysisk indeks og gjøre det relativt sømløst å legge til elementer både før og etter verdiene som allerede ligger i arrayet.
 
-Hvis vi garanterer at størrelsen på bufferen alltid er en toerpotens(N) kan vi bruke bitmaske (N - 1) for å konvertere mellom logisk indeks og fysisk ved over- og underflow. 
+Modulooperatoren gjør det mulig å indeksere riktig fysisk indeks ved å la indeks wrappe rundt kapasitetstallet
+$$
+i_{fysisk} = (start + i_{logisk}) \mod kapasitet
+$$
+
+Et alternativ til modulooperatoren er å låse kapasiteten til en toerpotens og maskere indekset til intervallet $[0, 2^k)$ der $k \in \mathbb{N}$
+$$
+i_{fysisk} = (start + i_{logisk})\,\&\,(kapasitet - 1)
+$$
+
+Ringbuffere gir altså konseptuell funksjonalitet for å legge til elementer på begge ender.
 
 ## Deque implementert rundt ringbuffer
 
-Først implementeres Deque og så overlates problemet med push_middle til senere.
+Deque er implementert som enklere struktur for testing og verifisering av den underliggende CircularBuffer-implementasjonen før denne brukes i Teque.
 
-Etter implementasjon og testing kan vi si at med Deque basert på CircularBuffer har oppnådd O(1) innsetting både i front og enden av array. Den har fortsatt en kostbar resize når den må vokse, så innsetting generelt er O(1) amortisert.
+I implementasjonen av Deque som ringbuffer/dynamisk array har push_front og push_back amortisert O(1) og get har O(1).
 
-## Teque
-For å kunne push middle trenger vi to Deque strukturer som vi setter sammen. 
+## Teque basert på to ringbuffere (Oppgave 1a)
+For at push_middle ikke skal nødvendiggjøre flytting og pådra seg O(n) i kompleksitet, må dette også skje uten å flytte på resten av verdiene i strukturen. Et alternativ er å dele strukturen i to objekter, ett som holder verdiene foran midten og ett som holder verdiene bak midten.
 
-For å unngå ekstra nivå i koden implementeres Teque direkte på CircularBuffer.
+To ringbuffere L (eft) og R (igth) utgjør denne overordnede strukturen. Som for Deque forholder den overordnede strukturen seg kun til logiske indekser og den må implementere funksjonalitet som ivaretar oppgavens definisjon av midtpunkt.
 
-To ringbuffere L (eft) og R (igth) utgjør strukturen.
+Ringbufferne har push/pop både front/back og kan i tillegg returne størrelse.
 
-Ringbufferene har push/pop både front/back og kan i tillegg returne størrelse.
+### Balansering
+Det er implementert en Balance-metode som sikrer invarianten $|L| - |R| \in \{0, 1\}$.
 
-Det er implementert en Balance som itererer hele strukturen til den er balansert (|L| - |R| = 1 godtas).
+push_middle er implementert slik at $L$ får det nye elementet når $|L| = |R|$ og ivaretar invarianten.
 
-Balanseringen opprettholder invarianten |L| - |R| <= 1 og oppfyller kravet om hvilken indeks push_middle skal legges i (som tolket fra oppgaven).
+Ved innsetting av ett element kan invarianten maksimalt være brutt med ett element. Følgelig trenger Balance maksimalt å flytte ett element mellom L og R og har kjøretidskompleksitet $O(1)$ amortisert siden den kan utløse en resize.
 
-Balanseringen kan ende opp med å bli noen operasjoner, spesielt hvis invarianten av en eller annen grunn ikke var opprettholdt før kallet. Men den vokser ikke med antall elementer i arrayen(e). Den er altså O(1).
+### Vurdering av tidskompleksitet for Teque (oppgave 1b)
 
-Dermed har vi 
+
+|Struktur|get|push_front|push_middle|push_back|
+|-|-|-|-|-|
+|Lenket liste|O(n)|O(1)|O(1)**|O(1)**|
+|Dynamisk Array|O(1)|O(n)|O(n)|O(1)*|
+|Ringbuffer|O(1)|O(1)*|O(n)|O(1)*|
+|Dobbel ringbuffer|O(1)|O(1)*|O(1)*|O(1)*|
+
+*amortisert
+**ved ivaretakelse av pekere til hhv. midt og tail.
