@@ -26,7 +26,7 @@ $i_{fysisk} = (start + i_{logisk}) \mod kapasitet$
 
 Et alternativ til modulooperatoren er å låse kapasiteten til en toerpotens og maskere indekset til intervallet $[0, 2^k)$ der $k \in \mathbb{N}$
 
-$i_{fysisk} = (start + i_{logisk})\,\&\,(kapasitet - 1)$
+$i_{fysisk} = (start + i_{logisk}) \& (kapasitet - 1)$
 
 Ringbuffere gir altså konseptuell funksjonalitet for å legge til elementer på begge ender.
 
