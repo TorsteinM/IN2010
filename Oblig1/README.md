@@ -21,11 +21,13 @@ Dermed må normalt alle verdiene flyttes ett hakk om et nytt element skal få f�
 Ringbuffer kan danne et grensesnitt mellom logisk indeks og fysisk indeks og gjøre det relativt sømløst å legge til elementer både før og etter verdiene som allerede ligger i arrayet.
 
 Modulooperatoren gjør det mulig å indeksere riktig fysisk indeks ved å la indeks wrappe rundt kapasitetstallet
+
 $$
 i_{fysisk} = (start + i_{logisk}) \mod kapasitet
 $$
 
 Et alternativ til modulooperatoren er å låse kapasiteten til en toerpotens og maskere indekset til intervallet $[0, 2^k)$ der $k \in \mathbb{N}$
+
 $$
 i_{fysisk} = (start + i_{logisk})\,\&\,(kapasitet - 1)
 $$
